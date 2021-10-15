@@ -75,7 +75,7 @@ export default class Game extends Phaser.Scene
         const wallsLayer = map.createLayer('Wall', tileset)
         wallsLayer.setCollisionByProperty({ collides: true})
 
-        debugDraw(wallsLayer, this);
+        //debugDraw(wallsLayer, this);
 
         this.physics.add.collider(this.faune, wallsLayer)
 
