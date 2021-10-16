@@ -6,6 +6,8 @@ import '~/characters/Faune';
 import Skeleton from '~/enemies/Skeleton';
 import Faune from '~/characters/Faune';
 
+import { sceneEvents } from '~/events/EventCenter';
+
 export default class Game extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private faune!: Faune;
@@ -21,6 +23,8 @@ export default class Game extends Phaser.Scene {
   create() {
     createSkeletonAnims(this.anims);
     createCharacterAnims(this.anims);
+
+    this.scene.run('game-ui');
 
     const map = this.make.tilemap({ key: 'dungeon' });
     const tileset = map.addTilesetImage('dungeon', 'tileset');
@@ -71,6 +75,8 @@ export default class Game extends Phaser.Scene {
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(200);
 
     this.faune.handleDamage(dir);
+
+    sceneEvents.emit('player-health-changed', this.faune.health);
   }
 
   update(t: number, dt: number) {

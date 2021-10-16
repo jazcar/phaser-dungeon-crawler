@@ -11,11 +11,17 @@ declare global {
 enum HealthState {
   IDLE,
   DAMAGE,
+  DEAD,
 }
 
 export default class Faune extends Phaser.Physics.Arcade.Sprite {
   private healthState = HealthState.IDLE;
   private damageTime = 0;
+  private _health = 3;
+
+  get health() {
+    return this._health;
+  }
 
   constructor(
     scene: Phaser.Scene,
@@ -58,13 +64,16 @@ export default class Faune extends Phaser.Physics.Arcade.Sprite {
     } else {
       const parts = this.anims.currentAnim.key.split('-');
       parts[1] = 'idle';
-      this.play(parts.join('-'));
+      this.anims.play(parts.join('-'));
       this.setVelocity(0, 0);
     }
   }
 
   handleDamage(dir: Phaser.Math.Vector2) {
-    if (this.healthState === HealthState.DAMAGE) {
+    if (
+      this.healthState === HealthState.DAMAGE ||
+      this.healthState === HealthState.DEAD
+    ) {
       return;
     }
 
@@ -72,9 +81,17 @@ export default class Faune extends Phaser.Physics.Arcade.Sprite {
 
     this.setTint(0x0ff0000);
     this.healthState = HealthState.DAMAGE;
+
+    --this._health;
+
+    if (this._health <= 0) {
+      this.healthState = HealthState.DEAD;
+    }
   }
 
   preUpdate(t: number, dt: number) {
+    super.preUpdate(t, dt);
+
     switch (this.healthState) {
       case HealthState.IDLE:
         break;
