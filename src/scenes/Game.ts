@@ -5,6 +5,7 @@ import { createCharacterAnims } from '~/anims/CharacterAnims';
 import '~/characters/Faune';
 import Skeleton from '~/enemies/Skeleton';
 import Faune from '~/characters/Faune';
+import { createChestAnims } from '~/anims/TreasureAnims';
 
 import { sceneEvents } from '~/events/EventCenter';
 
@@ -26,6 +27,7 @@ export default class Game extends Phaser.Scene {
   create() {
     createSkeletonAnims(this.anims);
     createCharacterAnims(this.anims);
+    createChestAnims(this.anims);
 
     this.scene.run('game-ui');
 
@@ -57,8 +59,21 @@ export default class Game extends Phaser.Scene {
 
     //debugDraw(wallsLayer, this);
 
+    const chests = this.physics.add.staticGroup();
+    const chestsLayer = map.getObjectLayer('Chests');
+    chestsLayer.objects.forEach((chestObj) => {
+      chests.get(
+        chestObj.x! + chestObj.width! * 0.5,
+        chestObj.y! - chestObj.height! * 0.5,
+        'treasure',
+        'chest_full_open_anim_f0.png'
+      );
+    });
+
     this.physics.add.collider(this.faune, wallsLayer);
     this.physics.add.collider(this.skeletons, wallsLayer);
+    this.physics.add.collider(this.faune, chests);
+    this.physics.add.collider(this.skeletons, chests);
     this.physics.add.collider(
       this.knives,
       wallsLayer,
