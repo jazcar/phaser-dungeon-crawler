@@ -39,7 +39,10 @@ export default class Faune extends Phaser.Physics.Arcade.Sprite {
     if (!cursors) {
       return;
     }
-    if (this.healthState === HealthState.DAMAGE) {
+    if (
+      this.healthState === HealthState.DAMAGE ||
+      this.healthState === HealthState.DEAD
+    ) {
       return;
     }
 
@@ -70,22 +73,20 @@ export default class Faune extends Phaser.Physics.Arcade.Sprite {
   }
 
   handleDamage(dir: Phaser.Math.Vector2) {
-    if (
-      this.healthState === HealthState.DAMAGE ||
-      this.healthState === HealthState.DEAD
-    ) {
+    if (this.healthState === HealthState.DAMAGE) {
       return;
     }
-
-    this.setVelocity(dir.x, dir.y);
-
-    this.setTint(0x0ff0000);
-    this.healthState = HealthState.DAMAGE;
 
     --this._health;
 
     if (this._health <= 0) {
       this.healthState = HealthState.DEAD;
+      this.anims.play('faune-faint');
+    } else {
+      this.setVelocity(dir.x, dir.y);
+
+      this.setTint(0x0ff0000);
+      this.healthState = HealthState.DAMAGE;
     }
   }
 
