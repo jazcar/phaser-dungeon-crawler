@@ -11,6 +11,9 @@ import { sceneEvents } from '~/events/EventCenter';
 export default class Game extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private faune!: Faune;
+  private playerSkeletonCollider!: Phaser.Physics.Arcade.Collider;
+  private knives!: Phaser.Physics.Arcade.Group;
+  private skeletons!: Phaser.Physics.Arcade.Group;
 
   constructor() {
     super('game');
@@ -31,9 +34,14 @@ export default class Game extends Phaser.Scene {
 
     map.createLayer('Ground', tileset);
 
-    this.faune = this.add.faune(128, 128, 'faune');
+    this.knives = this.physics.add.group({
+      classType: Phaser.Physics.Arcade.Image,
+    });
 
-    const skeletons = this.physics.add.group({
+    this.faune = this.add.faune(128, 128, 'faune');
+    this.faune.setKnives(this.knives);
+
+    this.skeletons = this.physics.add.group({
       classType: Skeleton,
       createCallback: (go) => {
         const skelGo = go as Skeleton;
@@ -42,7 +50,7 @@ export default class Game extends Phaser.Scene {
       },
     });
 
-    skeletons.get(256, 128, 'skeleton');
+    this.skeletons.get(256, 128, 'skeleton');
 
     const wallsLayer = map.createLayer('Wall', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });
@@ -50,10 +58,24 @@ export default class Game extends Phaser.Scene {
     //debugDraw(wallsLayer, this);
 
     this.physics.add.collider(this.faune, wallsLayer);
-    this.physics.add.collider(skeletons, wallsLayer);
-
+    this.physics.add.collider(this.skeletons, wallsLayer);
     this.physics.add.collider(
-      skeletons,
+      this.knives,
+      wallsLayer,
+      this.handleKnifeWallCollision,
+      undefined,
+      this
+    );
+    this.physics.add.collider(
+      this.knives,
+      this.skeletons,
+      this.handleKnifeLizardCollision,
+      undefined,
+      this
+    );
+
+    this.playerSkeletonCollider = this.physics.add.collider(
+      this.skeletons,
       this.faune,
       this.handlePlayerSkeletonCollision,
       undefined,
@@ -61,6 +83,21 @@ export default class Game extends Phaser.Scene {
     );
 
     this.cameras.main.startFollow(this.faune, true);
+  }
+
+  private handleKnifeWallCollision(
+    obj1: Phaser.GameObjects.GameObject,
+    obj2: Phaser.GameObjects.GameObject
+  ) {
+    this.knives.killAndHide(obj1);
+  }
+
+  private handleKnifeLizardCollision(
+    obj1: Phaser.GameObjects.GameObject,
+    obj2: Phaser.GameObjects.GameObject
+  ) {
+    this.knives.killAndHide(obj1);
+    this.skeletons.killAndHide(obj2);
   }
 
   private handlePlayerSkeletonCollision(
@@ -77,6 +114,10 @@ export default class Game extends Phaser.Scene {
     this.faune.handleDamage(dir);
 
     sceneEvents.emit('player-health-changed', this.faune.health);
+
+    if (this.faune.health <= 0) {
+      this.playerSkeletonCollider?.destroy();
+    }
   }
 
   update(t: number, dt: number) {
