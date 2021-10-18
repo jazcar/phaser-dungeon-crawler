@@ -1,4 +1,6 @@
 import Phaser, { Physics } from 'phaser';
+import Chest from '~/items/Chest';
+import { sceneEvents } from '../events/EventCenter';
 
 declare global {
   namespace Phaser.GameObjects {
@@ -19,9 +21,15 @@ export default class Faune extends Phaser.Physics.Arcade.Sprite {
   private damageTime = 0;
   private _health = 3;
   private knives?: Phaser.Physics.Arcade.Group;
+  private activeChest?: Chest;
+  private _coins = 0;
 
   get health() {
     return this._health;
+  }
+
+  setChest(chest: Chest) {
+    this.activeChest = chest;
   }
 
   setKnives(knives: Phaser.Physics.Arcade.Group) {
@@ -52,24 +60,37 @@ export default class Faune extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (Phaser.Input.Keyboard.JustDown(cursors.space!)) {
-      this.throwKnife();
+      if (this.activeChest) {
+        const coins = this.activeChest.open();
+        this._coins += coins;
+
+        sceneEvents.emit('player-coins-changed', this._coins);
+      } else {
+        this.throwKnife();
+      }
+      return;
     }
     const speed = 100;
 
-    if (cursors.left?.isDown) {
+    const leftDown = cursors.left?.isDown;
+    const rightDown = cursors.right?.isDown;
+    const upDown = cursors.up?.isDown;
+    const downDown = cursors.down?.isDown;
+
+    if (leftDown) {
       this.anims.play('faune-run-side', true);
       this.setVelocity(-speed, 0);
       this.scaleX = -1;
       this.body.offset.x = 24;
-    } else if (cursors.right?.isDown) {
+    } else if (rightDown) {
       this.anims.play('faune-run-side', true);
       this.setVelocity(speed, 0);
       this.scaleX = 1;
       this.body.offset.x = 8;
-    } else if (cursors.up?.isDown) {
+    } else if (upDown) {
       this.anims.play('faune-run-up', true);
       this.setVelocity(0, -speed);
-    } else if (cursors.down?.isDown) {
+    } else if (downDown) {
       this.anims.play('faune-run-down', true);
       this.setVelocity(0, speed);
     } else {
@@ -77,6 +98,10 @@ export default class Faune extends Phaser.Physics.Arcade.Sprite {
       parts[1] = 'idle';
       this.anims.play(parts.join('-'));
       this.setVelocity(0, 0);
+    }
+
+    if (leftDown || rightDown || upDown || downDown) {
+      this.activeChest = undefined;
     }
   }
 
