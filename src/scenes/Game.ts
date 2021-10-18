@@ -39,6 +39,7 @@ export default class Game extends Phaser.Scene {
 
     this.knives = this.physics.add.group({
       classType: Phaser.Physics.Arcade.Image,
+      maxSize: 3,
     });
 
     this.faune = this.add.faune(128, 128, 'faune');
@@ -53,7 +54,13 @@ export default class Game extends Phaser.Scene {
       },
     });
 
-    this.skeletons.get(256, 128, 'skeleton');
+    const skeletonsLayer = map.getObjectLayer('Enemies');
+    skeletonsLayer.objects.forEach((skelObj) => {
+      this.skeletons.get(
+        skelObj.x! + skelObj.width! * 0.5,
+        skelObj.y! - skelObj.height! * 0.5
+      );
+    });
 
     const wallsLayer = map.createLayer('Wall', tileset);
     wallsLayer.setCollisionByProperty({ collides: true });
@@ -90,7 +97,7 @@ export default class Game extends Phaser.Scene {
     this.physics.add.collider(
       this.knives,
       this.skeletons,
-      this.handleKnifeLizardCollision,
+      this.handleKnifeSkeletonCollision,
       undefined,
       this
     );
@@ -121,7 +128,7 @@ export default class Game extends Phaser.Scene {
     this.knives.killAndHide(obj1);
   }
 
-  private handleKnifeLizardCollision(
+  private handleKnifeSkeletonCollision(
     obj1: Phaser.GameObjects.GameObject,
     obj2: Phaser.GameObjects.GameObject
   ) {

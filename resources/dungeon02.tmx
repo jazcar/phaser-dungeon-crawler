@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="20">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="54">
  <editorsettings>
   <export target="../public/dungeon02.json" format="json"/>
  </editorsettings>
@@ -495,5 +495,41 @@
   <object id="15" gid="1" x="758.686" y="158.114" width="16" height="16"/>
   <object id="16" gid="1" x="738.332" y="157.69" width="16" height="16"/>
   <object id="17" gid="1" x="742.997" y="520.255" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="4" name="Enemies">
+  <object id="20" gid="73" x="285.02" y="83.4813" width="16" height="16"/>
+  <object id="21" gid="73" x="208.267" y="137.336" width="16" height="16"/>
+  <object id="22" gid="73" x="307.071" y="187.798" width="16" height="16"/>
+  <object id="23" gid="73" x="362.622" y="90.6902" width="16" height="16"/>
+  <object id="24" gid="73" x="285.02" y="143.697" width="16" height="16"/>
+  <object id="25" gid="73" x="254.912" y="74.1521" width="16" height="16"/>
+  <object id="26" gid="73" x="530.122" y="201.792" width="16" height="16"/>
+  <object id="27" gid="73" x="495.35" y="264.552" width="16" height="16"/>
+  <object id="28" gid="73" x="424.533" y="312.894" width="16" height="16"/>
+  <object id="29" gid="73" x="476.268" y="398.976" width="16" height="16"/>
+  <object id="30" gid="73" x="619.173" y="397.704" width="16" height="16"/>
+  <object id="31" gid="73" x="568.287" y="325.615" width="16" height="16"/>
+  <object id="32" gid="73" x="385.945" y="456.223" width="16" height="16"/>
+  <object id="33" gid="73" x="550.901" y="456.223" width="16" height="16"/>
+  <object id="34" gid="73" x="511.04" y="356.147" width="16" height="16"/>
+  <object id="35" gid="73" x="736.636" y="182.285" width="16" height="16"/>
+  <object id="36" gid="73" x="766.319" y="239.957" width="16" height="16"/>
+  <object id="37" gid="73" x="763.351" y="333.672" width="16" height="16"/>
+  <object id="38" gid="73" x="811.693" y="330.704" width="16" height="16"/>
+  <object id="39" gid="73" x="812.541" y="286.178" width="16" height="16"/>
+  <object id="40" gid="73" x="748.085" y="301.868" width="16" height="16"/>
+  <object id="41" gid="73" x="680.237" y="269.216" width="16" height="16"/>
+  <object id="42" gid="73" x="679.813" y="203.912" width="16" height="16"/>
+  <object id="43" gid="73" x="700.591" y="655.528" width="16" height="16"/>
+  <object id="44" gid="73" x="697.623" y="586.831" width="16" height="16"/>
+  <object id="45" gid="73" x="388.065" y="650.015" width="16" height="16"/>
+  <object id="46" gid="73" x="394.85" y="795.041" width="16" height="16"/>
+  <object id="47" gid="73" x="459.73" y="876.035" width="16" height="16"/>
+  <object id="48" gid="73" x="584.401" y="860.345" width="16" height="16"/>
+  <object id="49" gid="73" x="879.965" y="928.193" width="16" height="16"/>
+  <object id="50" gid="73" x="945.269" y="895.541" width="16" height="16"/>
+  <object id="51" gid="73" x="982.586" y="1107.99" width="16" height="16"/>
+  <object id="52" gid="73" x="876.573" y="1118.17" width="16" height="16"/>
+  <object id="53" gid="73" x="881.238" y="1165.66" width="16" height="16"/>
  </objectgroup>
 </map>
